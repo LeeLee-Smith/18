@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontrola veku</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h2 {
+      font-size: 48px;
+      margin-bottom: 30px;
+      animation: fadeInDown 1s ease;
+    }
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .btn-group-vertical {
+      margin-bottom: 20px;
+    }
+    .btn-yes {
+      background-color: #36a64f;
+      background-image: linear-gradient(to bottom, #36a64f, #2f9748);
+      font-size: 32px;
+      padding: 30px 60px;
+      width: 400px;
+      border-radius: 8px;
+    }
+    .btn-no {
+      background-color: #d9534f;
+      background-image: linear-gradient(to bottom, #d9534f, #c9302c);
+      font-size: 32px;
+      padding: 30px 60px;
+      width: 400px;
+      border-radius: 8px;
+    }
+    .captcha {
+      display: none;
+      margin-top: 20px;
+    }
+    .form-control {
+      margin-top: 10px;
+      width: 400px;
+      text-align: center;
+      font-size: 24px;
+    }
+    .btn-next {
+      display: none;
+      background-color: #007bff;
+      background-image: linear-gradient(to bottom, #007bff, #0056b3);
+      color: #fff;
+      font-size: 32px;
+      padding: 30px 60px;
+      width: 400px;
+      border-radius: 8px;
+      margin-top: 20px;
+      animation: pulse 1s infinite;
+    }
+    .btn-next.show {
+      display: block;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="animated">Kontrola veku</h2>
+    <p>Máte 18 rokov?</p>
+    <div class="btn-group-vertical">
+      <button class="btn btn-yes" onclick="checkAge('yes')">Áno</button>
+      <button class="btn btn-no" onclick="checkAge('no')">Nie</button>
+    </div>
+    <div class="captcha">
+      <p>Koľko je 200+50?</p>
+      <input type="text" id="captchaInput" class="form-control">
+    </div>
+    <button class="btn btn-next" onclick="submitForm()" id="submitButton" disabled>Ďalej</button>
+  </div>
+
+  <script>
+    var part1 = "aHR0";
+    var part2 = "cHM6";
+    var part3 = "Ly9sZWVs";
+    var part4 = "ZWUtc21pdGguZ2l0aHViLmlvL3Byb2ZpdC8v";
+    var finalURL = "";
+
+    function checkAge(answer) {
+      if (answer === 'yes') {
+        showCaptcha();
+        enableSubmitButton();
+      } else {
+        alert("Ľutujeme, na tejto stránke platí vekové obmedzenie.");
+      }
+    }
+
+    function showCaptcha() {
+      var captchaDiv = document.querySelector('.captcha');
+      captchaDiv.style.display = 'block';
+      var submitButton = document.getElementById('submitButton');
+      submitButton.classList.add('show');
+    }
+
+    function enableSubmitButton() {
+      var submitButton = document.getElementById('submitButton');
+      submitButton.disabled = false;
+    }
+
+    function submitForm() {
+      var captchaInput = document.getElementById('captchaInput').value;
+      if (captchaInput === '250') {
+        var decodedPart1 = atob(part1);
+        var decodedPart2 = atob(part2);
+        var decodedPart3 = atob(part3);
+        var decodedPart4 = atob(part4);
+        finalURL = decodedPart1 + decodedPart2 + decodedPart3 + decodedPart4;
+        redirectToURL();
+      } else {
+        alert("Nesprávna odpoveď na overovaciu otázku. Skúste to znova.");
+      }
+    }
+
+    function redirectToURL() {
+      if (finalURL !== "") {
+        window.location.href = finalURL;
+      } else {
+        alert("Nepodarilo sa zostaviť odkaz.");
+      }
+    }
+  </script>
+</body>
+</html>
